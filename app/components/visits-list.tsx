@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "~/components/ui/pagination"
+import { getUserVisits } from "~/api/visit"
 
 // Dummy data for now
 type DoctorVisit = {
@@ -34,10 +35,11 @@ export default function VisitsPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Simulate fetching paginated visits
-    const start = (currentPage - 1) * ITEMS_PER_PAGE
-    const end = start + ITEMS_PER_PAGE
-    setVisits(mockVisits.slice(start, end))
+    (async () => {
+      const token = localStorage.getItem("token") as string
+      const data = await getUserVisits(token)
+      setVisits(data)
+    })()
   }, [currentPage])
 
   const totalPages = Math.ceil(mockVisits.length / ITEMS_PER_PAGE)
