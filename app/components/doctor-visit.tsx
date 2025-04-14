@@ -1,67 +1,53 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { cn } from "~/lib/utils"
-import { Button } from "~/components/ui/button"
-import { Calendar } from "~/components/ui/calendar"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form"
-import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover"
-import { Input } from "~/components/ui/input"
-import { Textarea } from "~/components/ui/textarea"
-import { toast } from "sonner"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { toast } from "sonner";
 
-// Define the form schema with Zod
-const formSchema = z.object({
-  visitDate: z.date({
-    required_error: "Please select a date for your doctor visit.",
-  }),
-  reason: z.string().min(3, {
-    message: "Reason must be at least 3 characters.",
-  }),
-  diagnosis: z.string().min(3, {
-    message: "Diagnosis must be at least 3 characters.",
-  }),
-  notes: z.string().optional(),
-})
-
-type FormValues = z.infer<typeof formSchema>
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+import { Calendar } from "~/components/ui/calendar";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { postVisit } from "~/api/visit";
+import type { VisitCreate } from "~/lib/types";
+import { visitFormSchema } from "~/lib/schemas";
+import { useNavigate } from "react-router";
 
 export default function DoctorVisitPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Initialize the form
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const form = useForm<VisitCreate>({
+    resolver: zodResolver(visitFormSchema),
     defaultValues: {
+      visit_date: "",
+      doctor_name: "",
+      reason: "",
+      diagnosis: "",
       notes: "",
     },
-  })
+  });
 
-  // Handle form submission
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true)
+  const onSubmit = async (data: VisitCreate) => {
+    setIsSubmitting(true);
 
     try {
-      // In a real app, this would send data to your FastAPI backend
-      console.log("Form data:", data)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      toast("Doctor visit added successfully!")
-
-      // Reset the form
-      form.reset()
+      console.log("Form data:", data);
+      const token = localStorage.getItem("token") as string;
+      await postVisit(token, data);
+      toast("Doctor visit added successfully!");
+      navigate("/visits-list");
     } catch (error) {
-      toast("There was a problem adding your doctor visit.")
+      console.log(error)
+      toast("There was a problem adding your doctor visit.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto max-w-3xl py-10 px-4">
@@ -75,7 +61,7 @@ export default function DoctorVisitPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="visitDate"
+                name="visit_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Visit Date</FormLabel>
@@ -94,14 +80,29 @@ export default function DoctorVisitPage() {
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
+                          selected={new Date(field.value)}
+                          onSelect={(selectedDate) => field.onChange(selectedDate?.toISOString())}
                           disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                           initialFocus
                         />
                       </PopoverContent>
                     </Popover>
                     <FormDescription>The date when you visited the doctor.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="doctor_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Doctor Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Dr. Jane Smith" {...field} />
+                    </FormControl>
+                    <FormDescription>Enter the full name of the doctor you visited for this appointment.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -171,5 +172,5 @@ export default function DoctorVisitPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

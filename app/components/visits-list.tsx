@@ -51,7 +51,7 @@ export default function VisitsPage() {
             <CardDescription>Review your past medical visits.</CardDescription>
           </div>
           <Button
-            onClick={() => navigate("/doctor-visit")}
+            onClick={() => navigate("/add-visit")}
             className="bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
           >
             + Add Doctor Visit
