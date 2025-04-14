@@ -17,8 +17,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
+        // TODO Check that functionality
         if (!storedUser) {
-            navigate("/");
+            // navigate("/");
             return;
         }
         setUser(JSON.parse(storedUser));
@@ -33,6 +34,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const logout = () => {
         setUser(null);
+        localStorage.removeItem("user")
+        localStorage.removeItem("token")
     };
 
     return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
