@@ -1,18 +1,18 @@
+import { Link } from "react-router"
+import { LogIn } from "lucide-react"
+
 import { Button } from "~/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
-import { LogIn } from "lucide-react"
-import { Link, useNavigate } from "react-router"
+import { getAuthorizationUrl } from "~/api/google-auth"
 
 export default function LoginPage() {
-  const navigate = useNavigate()
-
-  const handleGoogleLogin = () => {
-    // In a real app, this would redirect to your FastAPI backend auth endpoint
-    console.log("Redirecting to Google login...")
-    // Simulating successful login for demo purposes
-    setTimeout(() => {
-      navigate("/dashboard")
-    }, 1000)
+  const handleGoogleLogin = async () => {
+    try {
+      const authUrl = await getAuthorizationUrl();
+      window.location.href = authUrl;
+    } catch (error) {
+      console.error('Google login error:', error);
+    }
   }
 
   return (
