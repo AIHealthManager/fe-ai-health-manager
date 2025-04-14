@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Button } from "~/components/ui/button";
 import { Menu, X } from "lucide-react";
+
+import { Button } from "~/components/ui/button";
 import { useAuth } from "~/context/auth-provider";
 
 export default function Header() {
@@ -45,9 +46,15 @@ export default function Header() {
 
                     <div className="hidden md:flex items-center space-x-4">
                         {isLoggedIn ? (
-                            <Button asChild className="bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700">
-                                <Link to="/" onClick={handleLogOutClick}>Log Out</Link>
-                            </Button>
+                            <>
+                                <Button asChild variant="outline">
+                                    <Link to="/" onClick={handleLogOutClick}>Log Out</Link>
+                                </Button>
+                                <Button asChild className="bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700">
+                                    <Link to="/profile">Profile</Link>
+                                </Button>
+                            </>
+                            
                         ) : (
                             <>
                                 <Button asChild variant="outline">
