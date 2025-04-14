@@ -33,9 +33,9 @@ export default function Header() {
                         <Link to="/chat" className="text-slate-700 hover:text-teal-600 transition-colors">
                             AI Chat
                         </Link>
-                        <a href="/#how-it-works" className="text-slate-700 hover:text-teal-600 transition-colors">
-                            How It Works
-                        </a>
+                        <Link to="/visits-list" className="text-slate-700 hover:text-teal-600 transition-colors">
+                            Visits
+                        </Link>
                         <a href="#" className="text-slate-700 hover:text-teal-600 transition-colors">
                             Features
                         </a>

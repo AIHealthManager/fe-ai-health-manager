@@ -1,9 +1,9 @@
-import ProfilePage from "~/components/profile";
-import type { Route } from "./+types/profile";
+import VisitsPage from "~/components/visits-list";
+import type { Route } from "./+types/visits-list";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "Profile" },
+        { title: "Visits List" },
         {
             name: "description",
             content:
@@ -12,6 +12,6 @@ export function meta({}: Route.MetaArgs) {
     ]
 }
 
-export default function ProfileRoute() {
-    return <ProfilePage />
+export default function VisitsListRoute() {
+    return <VisitsPage />
 }

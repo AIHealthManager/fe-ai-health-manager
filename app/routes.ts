@@ -7,4 +7,5 @@ export default [
     route("/chat", "routes/chat.tsx"),
     route("/google-auth", "routes/google-auth.tsx"),
     route("/profile", "routes/profile.tsx"),
+    route("/visits-list", "routes/visits-list.tsx"),
 ] satisfies RouteConfig;
