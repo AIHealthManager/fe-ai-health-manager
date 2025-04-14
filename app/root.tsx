@@ -8,6 +8,8 @@ import {
 } from "react-router";
 
 import Header from "~/components/Header";
+import Footer from "~/components/footer";
+import { Toaster } from "~/components/ui/sonner";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -36,7 +38,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Header />
+        <main>
         {children}
+
+        </main>
+        <Footer />
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

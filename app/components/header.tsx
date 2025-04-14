@@ -22,8 +22,8 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-slate-700 hover:text-teal-600 transition-colors">
-              Home
+            <Link to="/chat" className="text-slate-700 hover:text-teal-600 transition-colors">
+              AI Chat
             </Link>
             <a href="/#how-it-works" className="text-slate-700 hover:text-teal-600 transition-colors">
               How It Works

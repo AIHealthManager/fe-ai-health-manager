@@ -1,9 +1,9 @@
-import LoginPage from "~/components/login-page";
-import type { Route } from "./+types/login";
+import ChatPage from "~/components/chat-page";
+import type { Route } from "./+types/chat";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "AIHealthManager Login" },
+        { title: "AIHealthManager Chat" },
         {
             name: "description",
             content:
@@ -13,5 +13,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function LoginRoute() {
-    return <LoginPage />;
+    return <ChatPage />;
 }

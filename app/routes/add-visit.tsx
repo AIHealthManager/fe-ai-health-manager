@@ -1,9 +1,9 @@
-import LoginPage from "~/components/login-page";
-import type { Route } from "./+types/login";
+import DoctorVisitPage from "~/components/doctor-visit";
+import type { Route } from "./+types/add-visit";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "AIHealthManager Login" },
+        { title: "Add visitation" },
         {
             name: "description",
             content:
@@ -12,6 +12,6 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export default function LoginRoute() {
-    return <LoginPage />;
+export default function AddVisitRoute() {
+    return <DoctorVisitPage />
 }
