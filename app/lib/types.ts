@@ -1,3 +1,5 @@
+import type { BloodTypeEnum, SexEnum } from "./enums";
+
 export type User = {
   id: string;
   first_name: string;
@@ -20,3 +22,20 @@ export type Visit = VisitBase & {
   id: string;
   user_id: string;
 };
+
+type ProfileBase = {
+  sex: SexEnum;
+  birth_date: string;
+  blood_type: BloodTypeEnum;
+}
+
+export type ProfileFormValues = Omit<ProfileBase, "birth_date"> & {
+  birth_date: Date
+};
+
+export type ProfileData = ProfileBase;
+
+export type Profile = ProfileBase & {
+  id: string;
+  user_id: string;
+}
