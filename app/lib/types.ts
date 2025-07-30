@@ -39,3 +39,14 @@ export type Profile = ProfileBase & {
   id: string;
   user_id: string;
 }
+
+export type ChatMessage = {
+    id: string;
+    role: string;
+    content: string;
+}
+
+export type ChatResponse = {
+    messages: ChatMessage[];
+    conversation_id?: string;
+};

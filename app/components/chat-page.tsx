@@ -6,38 +6,27 @@ import { Avatar } from "~/components/ui/avatar"
 import { Mic, MicOff, Send, User, Bot, Play, Pause, Loader2 } from "lucide-react"
 import { cn } from "~/lib/utils"
 import { ScrollArea } from "~/components/ui/scroll-area"
+import { postTextMessage } from "~/api/chatApi"
 
 type Message = {
   id: string
   content: string
-  sender: "user" | "ai"
+  sender: "user" | "assistant"
   timestamp: Date
   type: "text" | "voice"
   audioUrl?: string
 }
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      content: "Hello! I'm your AI health assistant. How can I help you today?",
-      sender: "ai",
-      timestamp: new Date(),
-      type: "text",
-    },
-  ])
+  const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState<string | null>(null)
+  const [conversationId, setConversationId] =  useState<string | null>(null)
   const audioRefs = useRef<{ [key: string]: HTMLAudioElement }>({})
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const { status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = {}
-
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
 
   // Reset audio playing state when audio ends
   useEffect(() => {
@@ -54,7 +43,6 @@ export default function ChatPage() {
     }
   }, [messages])
 
-  // Handle sending a text message
   const handleSendMessage = async () => {
     if (inputValue.trim() === "") return
 
@@ -70,19 +58,24 @@ export default function ChatPage() {
     setInputValue("")
     setIsLoading(true)
 
-    // Simulate AI response after a delay
-    setTimeout(() => {
-      const aiResponse: Message = {
+    try {
+      const resp = await postTextMessage(inputValue, conversationId)
+      if (!conversationId && resp.conversation_id) {
+        setConversationId(resp.conversation_id)
+      }
+      const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: getAIResponse(inputValue),
-        sender: "ai",
         timestamp: new Date(),
+        content: resp.messages[0].content,
+        sender: "assistant",
         type: "text",
       }
-
-      setMessages((prev) => [...prev, aiResponse])
+      setMessages((prev) => [...prev, aiMessage])
+    } catch {
+      console.error("Error on send message")
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
   // Handle sending a voice message
@@ -106,7 +99,7 @@ export default function ChatPage() {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         content: "I've received your voice message. How can I assist you with your health concerns?",
-        sender: "ai",
+        sender: "assistant",
         timestamp: new Date(),
         type: "text",
       }
@@ -175,7 +168,7 @@ export default function ChatPage() {
                     className={cn("flex", message.sender === "user" ? "justify-end" : "justify-start")}
                   >
                     <div className="flex items-start gap-2 max-w-[80%]">
-                      {message.sender === "ai" && (
+                      {message.sender === "assistant" && (
                         <Avatar className="h-8 w-8 bg-blue-100 border border-blue-200">
                           <Bot className="h-4 w-4 text-blue-600" />
                         </Avatar>
