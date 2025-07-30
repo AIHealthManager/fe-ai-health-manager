@@ -46,6 +46,9 @@ export default function ChatPage() {
   const handleSendMessage = async () => {
     if (inputValue.trim() === "") return
 
+    const token = localStorage.getItem("token")
+    if (!token) return
+
     const newUserMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
@@ -59,7 +62,7 @@ export default function ChatPage() {
     setIsLoading(true)
 
     try {
-      const resp = await postTextMessage(inputValue, conversationId)
+      const resp = await postTextMessage(inputValue, conversationId, token)
       if (!conversationId && resp.conversation_id) {
         setConversationId(resp.conversation_id)
       }
@@ -160,7 +163,7 @@ export default function ChatPage() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="flex flex-col h-[600px]">
-            <ScrollArea className="flex-1 p-4">
+            <div className="flex-1 overflow-y-auto p-4">
               <div className="space-y-4">
                 {messages.map((message) => (
                   <div
@@ -239,7 +242,7 @@ export default function ChatPage() {
 
                 <div ref={messagesEndRef} />
               </div>
-            </ScrollArea>
+            </div>
 
             <div className="p-4 border-t">
               {status === "recording" && (
