@@ -7,6 +7,8 @@ import { Mic, MicOff, Send, User, Bot, Play, Pause, Loader2 } from "lucide-react
 import { cn } from "~/lib/utils"
 import { ScrollArea } from "~/components/ui/scroll-area"
 import { postTextMessage } from "~/api/chatApi"
+import ReactMarkdown from 'react-markdown';
+
 
 type Message = {
   id: string
@@ -186,7 +188,7 @@ export default function ChatPage() {
                         )}
                       >
                         {message.type === "text" ? (
-                          <p>{message.content}</p>
+                          <ReactMarkdown>{message.content}</ReactMarkdown>
                         ) : (
                           <div className="flex items-center gap-2">
                             <Button

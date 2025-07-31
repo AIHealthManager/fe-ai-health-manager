@@ -1,48 +1,32 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router"
-import { format } from "date-fns"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { format } from "date-fns";
 
-import { Button } from "~/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
-import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "~/components/ui/pagination"
-import { getUserVisits } from "~/api/visit"
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "~/components/ui/pagination";
+import { getUserVisits } from "~/api/visit";
+import type { Visit } from "~/lib/types";
 
-// Dummy data for now
-type DoctorVisit = {
-  id: string
-  visit_date: string
-  doctor_name: string
-  reason: string
-  diagnosis: string
-}
-
-const mockVisits: DoctorVisit[] = Array.from({ length: 22 }, (_, i) => ({
-  id: `${i + 1}`,
-  visit_date: new Date(Date.now() - i * 86400000 * 30).toISOString(),
-  doctor_name: `Dr. Smith #${i + 1}`,
-  reason: "Routine checkup",
-  diagnosis: "Healthy",
-}))
-
-const ITEMS_PER_PAGE = 5
+const ITEMS_PER_PAGE = 5;
 
 export default function VisitsPage() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [visits, setVisits] = useState<DoctorVisit[]>([])
-  const navigate = useNavigate()
+  const [currentPage, setCurrentPage] = useState(1);
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
-      const token = localStorage.getItem("token") as string
-      const data = await getUserVisits(token)
-      setVisits(data)
-    })()
-  }, [currentPage])
+      const token = localStorage.getItem("token") as string;
+      const data = await getUserVisits(token);
+      setVisits(data);
+    })();
+  }, [currentPage]);
 
-  const totalPages = Math.ceil(mockVisits.length / ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(visits.length / ITEMS_PER_PAGE);
 
   return (
     <div className="container mx-auto max-w-4xl py-10 px-4">
@@ -61,22 +45,41 @@ export default function VisitsPage() {
         </CardHeader>
 
         <CardContent>
+          
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Date</TableHead>
+                <TableHead>Location</TableHead>
                 <TableHead>Doctor</TableHead>
+                <TableHead>Referred By</TableHead>
                 <TableHead>Reason</TableHead>
+                <TableHead>Observations</TableHead>
                 <TableHead>Diagnosis</TableHead>
+                <TableHead>Referred To</TableHead>
+                <TableHead>Treatment</TableHead>
+                <TableHead>Intervention</TableHead>
+                <TableHead>Feedback</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead>Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {visits.map((visit) => (
                 <TableRow key={visit.id}>
-                  <TableCell>{format(new Date(visit.visit_date), "PPP")}</TableCell>
-                  <TableCell>{visit.doctor_name}</TableCell>
+                  <TableCell>{visit.visit_datetime ? format(new Date(visit.visit_datetime), "PPP") : "—"}</TableCell>
+                  <TableCell>{visit.location ?? "—"}</TableCell>
+                  <TableCell>{visit.doctor_name ?? "—"}</TableCell>
+                  <TableCell>{visit.referred_by ?? "—"}</TableCell>
                   <TableCell>{visit.reason}</TableCell>
-                  <TableCell>{visit.diagnosis}</TableCell>
+                  <TableCell>{visit.observations ?? "—"}</TableCell>
+                  <TableCell>{visit.diagnosis ?? "—"}</TableCell>
+                  <TableCell>{visit.referred_to ?? "—"}</TableCell>
+                  <TableCell>{visit.treatment ?? "—"}</TableCell>
+                  <TableCell>{visit.intervention ?? "—"}</TableCell>
+                  <TableCell>{visit.user_feedback ?? "—"}</TableCell>
+                  <TableCell>{visit.created_at ? format(new Date(visit.created_at), "PPP p") : "—"}</TableCell>
+                  <TableCell>{visit.updated_at ? format(new Date(visit.updated_at), "PPP p") : "—"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -108,5 +111,5 @@ export default function VisitsPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
