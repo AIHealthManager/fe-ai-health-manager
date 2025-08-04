@@ -1,5 +1,5 @@
-const BACKEND_URL = "http://localhost:8000"
-// const BACKEND_URL = "https://ai-health-manager-fastapi-702343364863.europe-west1.run.app";
+// const BACKEND_URL = "http://localhost:8000"
+const BACKEND_URL = "https://ai-health-manager-fastapi-702343364863.europe-west1.run.app";
 
 export const GOOGLE_LOGIN_URL = `${BACKEND_URL}/google-auth/login`;
 export const USER_URL = `${BACKEND_URL}/user/`;
